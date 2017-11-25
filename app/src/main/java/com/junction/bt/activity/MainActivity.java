@@ -17,7 +17,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Account account = CacheManager.getInstance().getCachedAccount();
+        openLogin();
+
+        /*Account account = CacheManager.getInstance().getCachedAccount();
         if (account == null) {
             openLogin();
         }
@@ -29,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 UserContext.getInstance().setAccount(account);
             }
-        }
+        }*/
     }
 
     private void openLogin() {

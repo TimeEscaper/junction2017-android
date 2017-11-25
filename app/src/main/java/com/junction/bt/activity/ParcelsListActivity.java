@@ -25,6 +25,7 @@ public class ParcelsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parcels_list);
 
+        /*
         token = UserContext.getInstance().getToken();
 
         List<Parcel> parcels = ApiService.getInstance().getParcels(token);
@@ -34,6 +35,6 @@ public class ParcelsListActivity extends AppCompatActivity {
             parcelsView.setAdapter(new ParcelsAdapter(this, parcels));
         } else {
             Toast.makeText(getApplicationContext(), "No parcels yet!", Toast.LENGTH_LONG);
-        }
+        } */
     }
 }

@@ -6,7 +6,7 @@ import java.util.List;
  * Created by sibirsky on 25.11.17.
  */
 
-public class Account {
+public class Account implements ApiResponse {
 
     private Integer userId;
     private String login;

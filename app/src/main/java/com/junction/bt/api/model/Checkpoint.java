@@ -4,7 +4,7 @@ package com.junction.bt.api.model;
  * Created by sibirsky on 25.11.17.
  */
 
-public class Checkpoint {
+public class Checkpoint implements ApiResponse {
 
     private Integer checkpointId;
     private String name;

@@ -9,12 +9,19 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.junction.bt.R;
+import com.junction.bt.api.ApiCallback;
 import com.junction.bt.api.ApiService;
 import com.junction.bt.api.model.Account;
+import com.junction.bt.api.model.ApiError;
+import com.junction.bt.api.model.ApiResponse;
 import com.junction.bt.context.UserContext;
 import com.junction.bt.exception.AuthException;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ApiCallback {
+
+    public static final String SUBSCRIBED_ID = "SUBSCRIBED_ID";
+
+    private Integer subscribeId = null;
 
     private EditText loginInput;
     private EditText passwordInput;
@@ -24,6 +31,10 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        if (savedInstanceState != null) {
+            subscribeId = savedInstanceState.getInt(SUBSCRIBED_ID);
+        }
 
         loginInput = (EditText)findViewById(R.id.login_input);
         passwordInput = (EditText)findViewById(R.id.password_input);
@@ -37,20 +48,53 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (subscribeId != null) {
+            boolean isCached = ApiService.getInstance().checkCache(this, subscribeId);
+            if (!isCached) {
+                boolean isPending = ApiService.getInstance().checkPending(this, subscribeId);
+                if (!isPending) {
+                    subscribeId = ApiService.getInstance().subscribe(this);
+                }
+            }
+        } else {
+            subscribeId = ApiService.getInstance().subscribe(this);
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        ApiService.getInstance().unsubscribeTemp(subscribeId);
+        savedInstanceState.putInt(SUBSCRIBED_ID, subscribeId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ApiService.getInstance().unsubscribe(subscribeId);
+        super.onDestroy();
+    }
+
     private void btnSignupPress() {
         String login = loginInput.getText().toString();
         String password = passwordInput.getText().toString();
 
-        try {
-            Account account = ApiService.getInstance().authorize(login, password);
-            UserContext.getInstance().setAccount(account);
-            openParcels();
-        } catch (AuthException e) {
-            Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
-        }
+        ApiService.getInstance().authorize(subscribeId, login, password);
     }
 
     private void openParcels() {
         startActivity(new Intent(LoginActivity.this, ParcelsListActivity.class));
+    }
+
+    @Override
+    public void onSuccess(ApiService.Method method, ApiResponse response) {
+        openParcels();
+    }
+
+    @Override
+    public void onError(ApiService.Method method, ApiError response) {
+        Toast.makeText(getApplicationContext(), response.getError(), Toast.LENGTH_LONG);
     }
 }

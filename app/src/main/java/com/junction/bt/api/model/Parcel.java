@@ -6,7 +6,7 @@ import java.util.List;
  * Created by sibirsky on 25.11.17.
  */
 
-public class Parcel {
+public class Parcel implements ApiResponse {
 
     private Integer parcelId;
     private User sender;

@@ -4,6 +4,8 @@ import com.junction.bt.api.model.Account;
 import com.junction.bt.api.model.Checkpoint;
 import com.junction.bt.api.model.Event;
 import com.junction.bt.api.model.Parcel;
+import com.junction.bt.api.model.ResponseList;
+import com.junction.bt.api.model.TokenStatus;
 import com.junction.bt.api.model.request.AuthRequest;
 import com.junction.bt.api.model.request.ParcelAliasRequest;
 
@@ -21,21 +23,21 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    @POST("/api/auth")
+    @POST("/login")
     Call<Account> auth(@Body AuthRequest request);
 
     @GET("/api/auth/check")
-    Call<Boolean> checkToken(@Query("token") String token);
+    Call<TokenStatus> checkToken(@Query("token") String token);
 
     @GET("/api/parcels")
-    Call<List<Parcel>> getParcels(@Query("token") String token);
+    Call<ResponseList<Parcel>> getParcels(@Query("token") String token);
 
     @GET("/api/checkpoints")
-    Call<List<Checkpoint>> getCheckpoints(@Query("ids") Integer[] ids,
+    Call<ResponseList<Checkpoint>> getCheckpoints(@Query("ids") Integer[] ids,
                                           @Query("token") String token);
 
     @GET("/api/events/unread")
-    Call<List<Event>> getUnreadEvents(@Query("token") String token);
+    Call<ResponseList<Event>> getUnreadEvents(@Query("token") String token);
 
     @POST("/api/parcel/alias")
     Call<Parcel> setParcelAlias(@Body ParcelAliasRequest request);

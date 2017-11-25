@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
  * Created by sibirsky on 25.11.17.
  */
 
-public class Event {
+public class Event implements ApiResponse {
 
     private LocalDateTime dateTime;
     private Integer checkpointId;
