@@ -1,5 +1,7 @@
 package com.junction.bt.activity;
 
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -59,13 +61,17 @@ public class ParcelsListActivity extends AppCompatActivity implements ApiCallbac
     @Override
     protected void onSaveInstanceState(Bundle savedInstanceState) {
         super.onSaveInstanceState(savedInstanceState);
-        ApiService.getInstance().unsubscribeTemp(subscribeId);
-        savedInstanceState.putInt(SUBSCRIBED_ID, subscribeId);
+        if (subscribeId != null) {
+            ApiService.getInstance().unsubscribeTemp(subscribeId);
+            savedInstanceState.putInt(SUBSCRIBED_ID, subscribeId);
+        }
     }
 
     @Override
     protected void onDestroy() {
-        ApiService.getInstance().unsubscribe(subscribeId);
+        if (subscribeId != null) {
+            ApiService.getInstance().unsubscribe(subscribeId);
+        }
         super.onDestroy();
     }
 
@@ -81,6 +87,14 @@ public class ParcelsListActivity extends AppCompatActivity implements ApiCallbac
 
     @Override
     public void onError(ApiService.Method method, ApiError response) {
-        Toast.makeText(getApplicationContext(), response.getError(), Toast.LENGTH_LONG);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage("Error while checking token!" + response.getError());
+        dialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        dialogBuilder.create().show();
     }
 }

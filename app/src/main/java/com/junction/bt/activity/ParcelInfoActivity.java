@@ -1,6 +1,8 @@
 package com.junction.bt.activity;
 
 import android.app.ActionBar;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -122,7 +124,15 @@ public class ParcelInfoActivity extends AppCompatActivity implements ApiCallback
 
     @Override
     public void onError(ApiService.Method method, ApiError response) {
-        Toast.makeText(getApplicationContext(), response.getError(), Toast.LENGTH_LONG);
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage("Error while checking token!" + response.getError());
+        dialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+
+            }
+        });
+        dialogBuilder.create().show();
     }
 
     private void render() {

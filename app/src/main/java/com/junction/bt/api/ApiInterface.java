@@ -28,7 +28,7 @@ public interface ApiInterface {
     @POST("/simple/login")
     Call<Account> auth(@Body AuthRequest request);
 
-    @GET("/simple/auth/check")
+    @GET("/simple/checktoken")
     Call<TokenStatus> checkToken(@Query("token") String token);
 
     @GET("/simple/parcels")
