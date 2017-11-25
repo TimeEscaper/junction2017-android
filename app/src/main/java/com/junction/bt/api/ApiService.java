@@ -30,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiService {
 
-    private static final String API_URL = "http://40.69.84.9:8080/simple/";
+    private static final String API_URL = "http://40.69.84.9:8080";
 
     private static final Retrofit RETROFIT = new Retrofit.Builder()
             .baseUrl(API_URL)
@@ -222,7 +222,47 @@ public class ApiService {
     }
 
     public void getCheckpoints(final Integer subscribedId, List<Integer> checkpointIds, String token) {
-        return;
+        Call<ResponseList<Checkpoint>> call = api.getCheckpoints(checkpointIds.toArray(
+                new Integer[checkpointIds.size()]), token);
+        call.enqueue(new Callback<ResponseList<Checkpoint>>() {
+            @Override
+            public void onResponse(Call<ResponseList<Checkpoint>> call, Response<ResponseList<Checkpoint>> response) {
+                ApiResponse apiResponse;
+                boolean isError;
+                if (response.isSuccessful()) {
+                    apiResponse = response.body();
+                    isError = false;
+                } else {
+                    apiResponse = new ApiError();
+                    isError = true;
+                    ;               }
+                ApiCallback apiCallback = apiCallbacks.get(subscribedId);
+                if (apiCallback != null) {
+                    if (!isError) {
+                        apiCallback.onSuccess(Method.GET_PARCELS, apiResponse);
+                    } else {
+                        apiCallback.onError(Method.GET_PARCELS, (ApiError)apiResponse);
+                    }
+                } else {
+                    if (apiCallbacks.containsKey(subscribedId)) {
+                        apiCache.put(subscribedId, new ApiCacheItem(apiResponse, Method.GET_CHECKPOINTS));
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseList<Checkpoint>> call, Throwable t) {
+                ApiError apiError = new ApiError(t.getMessage());
+                ApiCallback apiCallback = apiCallbacks.get(subscribedId);
+                if (apiCallback != null) {
+                    apiCallback.onError(Method.GET_CHECKPOINTS, apiError);
+                } else {
+                    if (apiCallbacks.containsKey(subscribedId)) {
+                        apiCache.put(subscribedId, new ApiCacheItem(apiError, Method.GET_CHECKPOINTS));
+                    }
+                }
+            }
+        });
     }
 
     public List<Event> getUnreadEvents(String token) {

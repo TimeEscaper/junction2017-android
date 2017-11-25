@@ -14,6 +14,7 @@ import java.util.List;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -23,22 +24,23 @@ import retrofit2.http.Query;
 
 public interface ApiInterface {
 
-    @POST("/login")
+    @Headers({"Accept: application/json"})
+    @POST("/simple/login")
     Call<Account> auth(@Body AuthRequest request);
 
-    @GET("/api/auth/check")
+    @GET("/simple/auth/check")
     Call<TokenStatus> checkToken(@Query("token") String token);
 
-    @GET("/api/parcels")
+    @GET("/simple/parcels")
     Call<ResponseList<Parcel>> getParcels(@Query("token") String token);
 
-    @GET("/api/checkpoints")
+    @GET("/simple/checkpoints")
     Call<ResponseList<Checkpoint>> getCheckpoints(@Query("ids") Integer[] ids,
                                           @Query("token") String token);
 
-    @GET("/api/events/unread")
+    @GET("/simple/events/unread")
     Call<ResponseList<Event>> getUnreadEvents(@Query("token") String token);
 
-    @POST("/api/parcel/alias")
+    @POST("/simple/parcel/alias")
     Call<Parcel> setParcelAlias(@Body ParcelAliasRequest request);
 }

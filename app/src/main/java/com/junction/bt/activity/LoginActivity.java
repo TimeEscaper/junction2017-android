@@ -1,6 +1,8 @@
 package com.junction.bt.activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -16,6 +18,7 @@ import com.junction.bt.api.model.ApiError;
 import com.junction.bt.api.model.ApiResponse;
 import com.junction.bt.context.UserContext;
 import com.junction.bt.exception.AuthException;
+import com.junction.bt.util.JsonUtil;
 
 public class LoginActivity extends AppCompatActivity implements ApiCallback {
 
@@ -90,11 +93,19 @@ public class LoginActivity extends AppCompatActivity implements ApiCallback {
 
     @Override
     public void onSuccess(ApiService.Method method, ApiResponse response) {
+        Account account = (Account)response;
+        putAccountToCache(account);
         openParcels();
     }
 
     @Override
     public void onError(ApiService.Method method, ApiError response) {
         Toast.makeText(getApplicationContext(), response.getError(), Toast.LENGTH_LONG);
+    }
+
+    private void putAccountToCache(Account account) {
+        SharedPreferences sharedPreferences = LoginActivity.this.getPreferences(Context.MODE_PRIVATE);
+        String accountJson = JsonUtil.toJson(account);
+        sharedPreferences.edit().putString("ACCOUNT", accountJson);
     }
 }

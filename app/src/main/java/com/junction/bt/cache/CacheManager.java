@@ -1,5 +1,6 @@
 package com.junction.bt.cache;
 
+import com.junction.bt.activity.MainActivity;
 import com.junction.bt.api.model.Account;
 
 /**
@@ -14,6 +15,10 @@ public class CacheManager {
     }
 
     private CacheManager() {
+    }
+
+    public void cacheAccount(Account account) {
+
     }
 
     public Account getCachedAccount() {
