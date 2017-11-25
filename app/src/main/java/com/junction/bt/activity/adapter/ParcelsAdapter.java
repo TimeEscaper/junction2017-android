@@ -66,7 +66,7 @@ public class ParcelsAdapter extends RecyclerView.Adapter<ParcelsAdapter.ParcelVi
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, ParcelInfoActivity.class);
-                    intent.putExtra(PARCEL_TAG, JsonUtil.toJson(parcel));
+                    intent.putExtra(PARCEL_TAG, parcel.getParcelId());
                     context.startActivity(intent);
                 }
             });

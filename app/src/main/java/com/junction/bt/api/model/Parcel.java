@@ -15,6 +15,7 @@ public class Parcel implements ApiResponse {
     private String backAddress;
     private Checkpoint from;
     private Checkpoint to;
+    private Integer weight;
     private Event[] history;
     private String alias;
 
@@ -69,6 +70,10 @@ public class Parcel implements ApiResponse {
     public void setTo(Checkpoint to) {
         this.to = to;
     }
+
+    public Integer getWeight() { return weight; }
+
+    public void setWeight(Integer weight) { this.weight = weight; }
 
     public Event[] getHistory() {
         return history;

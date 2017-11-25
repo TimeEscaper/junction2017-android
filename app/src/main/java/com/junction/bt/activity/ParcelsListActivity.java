@@ -8,33 +8,79 @@ import android.widget.Toast;
 
 import com.junction.bt.R;
 import com.junction.bt.activity.adapter.ParcelsAdapter;
+import com.junction.bt.api.ApiCallback;
 import com.junction.bt.api.ApiService;
+import com.junction.bt.api.model.ApiError;
+import com.junction.bt.api.model.ApiResponse;
 import com.junction.bt.api.model.Parcel;
+import com.junction.bt.api.model.ResponseList;
+import com.junction.bt.cache.CacheManager;
 import com.junction.bt.context.UserContext;
 
 import java.util.List;
 
-public class ParcelsListActivity extends AppCompatActivity {
+public class ParcelsListActivity extends AppCompatActivity implements ApiCallback {
+
+    public static final String SUBSCRIBED_ID = "SUBSCRIBED_ID";
 
     private RecyclerView parcelsView;
 
-    private String token;
+    private Integer subscribeId = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_parcels_list);
 
-        /*
-        token = UserContext.getInstance().getToken();
+        parcelsView = (RecyclerView)findViewById(R.id.parcels);
 
-        List<Parcel> parcels = ApiService.getInstance().getParcels(token);
-        if (!parcels.isEmpty()) {
-            parcelsView = (RecyclerView)findViewById(R.id.parcels);
-            parcelsView.setLayoutManager(new LinearLayoutManager(this));
-            parcelsView.setAdapter(new ParcelsAdapter(this, parcels));
+        if (savedInstanceState != null) {
+            subscribeId = savedInstanceState.getInt(SUBSCRIBED_ID);
+        }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (subscribeId != null) {
+            boolean isCached = ApiService.getInstance().checkCache(this, subscribeId);
+            if (!isCached) {
+                boolean isPending = ApiService.getInstance().checkPending(this, subscribeId);
+                if (!isPending) {
+                    subscribeId = ApiService.getInstance().subscribe(this);
+                }
+            }
         } else {
-            Toast.makeText(getApplicationContext(), "No parcels yet!", Toast.LENGTH_LONG);
-        } */
+            subscribeId = ApiService.getInstance().subscribe(this);
+            ApiService.getInstance().getParcels(subscribeId, UserContext.getInstance().getToken());
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle savedInstanceState) {
+        super.onSaveInstanceState(savedInstanceState);
+        ApiService.getInstance().unsubscribeTemp(subscribeId);
+        savedInstanceState.putInt(SUBSCRIBED_ID, subscribeId);
+    }
+
+    @Override
+    protected void onDestroy() {
+        ApiService.getInstance().unsubscribe(subscribeId);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onSuccess(ApiService.Method method, ApiResponse response) {
+        ResponseList<Parcel> parcelsList = (ResponseList<Parcel>)response;
+        CacheManager.getInstance().putParcels(parcelsList.getItems());
+        if (!parcelsList.getItems().isEmpty()) {
+            parcelsView.setLayoutManager(new LinearLayoutManager(this));
+            parcelsView.setAdapter(new ParcelsAdapter(this, parcelsList.getItems()));
+        }
+    }
+
+    @Override
+    public void onError(ApiService.Method method, ApiError response) {
+        Toast.makeText(getApplicationContext(), response.getError(), Toast.LENGTH_LONG);
     }
 }

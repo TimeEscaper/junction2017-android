@@ -30,7 +30,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiService {
 
-    private static final String API_URL = "http://40.69.84.9:8080";
+    private static final String API_URL = "http://10.100.17.77:8080";
 
     private static final Retrofit RETROFIT = new Retrofit.Builder()
             .baseUrl(API_URL)
