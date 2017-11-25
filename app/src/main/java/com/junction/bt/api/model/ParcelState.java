@@ -6,7 +6,6 @@ package com.junction.bt.api.model;
 
 public enum ParcelState {
 
-    INIT,
     RECEIVED,
     SENT,
     WARNING,

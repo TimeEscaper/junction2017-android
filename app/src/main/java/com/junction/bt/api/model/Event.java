@@ -10,6 +10,7 @@ public class Event {
 
     private LocalDateTime dateTime;
     private Integer checkpointId;
+    private Integer parcelId;
     private ParcelState state;
     private String description;
 
