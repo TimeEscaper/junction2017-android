@@ -10,6 +10,7 @@ public class Parcel {
 
     private Integer parcelId;
     private User sender;
+    private User receiver;
     private String destinationAddress;
     private String backAddress;
     private Checkpoint from;
@@ -32,6 +33,10 @@ public class Parcel {
     public void setSender(User sender) {
         this.sender = sender;
     }
+
+    public User getReceiver() { return receiver; }
+
+    public void setReceiver(User receiver) { this.receiver = receiver; }
 
     public String getDestinationAddress() {
         return destinationAddress;

@@ -6,6 +6,7 @@ import com.junction.bt.api.model.Event;
 import com.junction.bt.api.model.Parcel;
 import com.junction.bt.exception.AuthException;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Retrofit;
@@ -34,7 +35,9 @@ public class ApiService {
     }
 
     public Account authorize(String login, String password) throws AuthException {
-        return null;
+        Account account = new Account();
+        account.setToken("mockToken");
+        return account;
     }
 
     public boolean checkToken(String token) {
@@ -42,7 +45,17 @@ public class ApiService {
     }
 
     public List<Parcel> getParcels(String token) {
-        return null;
+        List<Parcel> parcels = new ArrayList<>();
+        Parcel parcel1 = new Parcel();
+        parcel1.setParcelId(1);
+        parcel1.setAlias("Parcel 1");
+        Parcel parcel2 = new Parcel();
+        parcel2.setParcelId(2);
+        parcel2.setAlias("Parcel 2");
+        parcels.add(parcel1);
+        parcels.add(parcel2);
+
+        return parcels;
     }
 
     public List<Checkpoint> getCheckpoints(List<Integer> checkpointIds) {

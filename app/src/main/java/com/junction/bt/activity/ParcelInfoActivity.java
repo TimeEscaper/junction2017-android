@@ -1,5 +1,6 @@
 package com.junction.bt.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -10,6 +11,8 @@ import android.view.View;
 import com.junction.bt.R;
 
 public class ParcelInfoActivity extends AppCompatActivity {
+
+    public static final String PARCEL_ID_TAG = "PARCEL_ID";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

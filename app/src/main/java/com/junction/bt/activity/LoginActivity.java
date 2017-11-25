@@ -1,5 +1,6 @@
 package com.junction.bt.activity;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -43,8 +44,13 @@ public class LoginActivity extends AppCompatActivity {
         try {
             Account account = ApiService.getInstance().authorize(login, password);
             UserContext.getInstance().setAccount(account);
+            openParcels();
         } catch (AuthException e) {
             Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG);
         }
+    }
+
+    private void openParcels() {
+        startActivity(new Intent(LoginActivity.this, ParcelsListActivity.class));
     }
 }
