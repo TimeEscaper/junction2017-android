@@ -6,16 +6,14 @@ package com.junction.bt.api.model;
 
 public class Checkpoint {
 
-    private Integer id;
+    private Integer checkpointId;
     private String name;
     private String address;
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getCheckpointId() { return checkpointId; }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setCheckpointId(Integer checkpointId) {
+        this.checkpointId = checkpointId;
     }
 
     public String getName() {

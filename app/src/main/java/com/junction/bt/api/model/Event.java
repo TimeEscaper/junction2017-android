@@ -16,9 +16,7 @@ public class Event {
 
     public Event() {}
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
-    }
+    public LocalDateTime getDateTime() { return dateTime; }
 
     public void setDateTime(LocalDateTime dateTime) {
         this.dateTime = dateTime;
@@ -31,6 +29,10 @@ public class Event {
     public void setCheckpointId(Integer checkpointId) {
         this.checkpointId = checkpointId;
     }
+
+    public Integer getParcelId() { return parcelId;}
+
+    public void setParcelId(Integer parcelId) { this.parcelId = parcelId; }
 
     public ParcelState getState() {
         return state;

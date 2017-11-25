@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Parcel {
 
-    private Integer id;
+    private Integer parcelId;
     private User sender;
     private String destinationAddress;
     private String backAddress;
@@ -19,12 +19,10 @@ public class Parcel {
 
     public Parcel() {}
 
-    public Integer getId() {
-        return id;
-    }
+    public Integer getParcelId() { return parcelId; }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setParcelId(Integer id) {
+        this.parcelId = parcelId;
     }
 
     public User getSender() {
