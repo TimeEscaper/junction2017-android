@@ -22,4 +22,6 @@ public class UserContext {
     public Account getAccount() { return account; }
 
     public void setAccount(Account account) { this.account = account; }
+
+    public String getToken() { return account.getToken(); }
 }

@@ -12,6 +12,7 @@ public class Event {
     private Integer checkpointId;
     private Integer parcelId;
     private ParcelState state;
+    private Integer weight;
     private String description;
 
     public Event() {}
@@ -45,6 +46,10 @@ public class Event {
     public String getDescription() {
         return description;
     }
+
+    public Integer getWeight() { return weight; }
+
+    public void setWeight(Integer weight) { this.weight = weight; }
 
     public void setDescription(String description) {
         this.description = description;

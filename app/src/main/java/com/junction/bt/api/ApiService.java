@@ -4,6 +4,7 @@ import com.junction.bt.api.model.Account;
 import com.junction.bt.api.model.Checkpoint;
 import com.junction.bt.api.model.Event;
 import com.junction.bt.api.model.Parcel;
+import com.junction.bt.exception.AuthException;
 
 import java.util.List;
 
@@ -16,7 +17,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiService {
 
-    private static final String API_URL = "URL";
+    private static final String API_URL = "http://api.my.com/";
 
     private static final Retrofit RETROFIT = new Retrofit.Builder()
             .baseUrl(API_URL)
@@ -32,11 +33,15 @@ public class ApiService {
     private ApiService() {
     }
 
-    public Account authorize(String login, String password) {
+    public Account authorize(String login, String password) throws AuthException {
         return null;
     }
 
-    public List<Parcel> getParcels(Integer userId) {
+    public boolean checkToken(String token) {
+        return false;
+    }
+
+    public List<Parcel> getParcels(String token) {
         return null;
     }
 
@@ -44,11 +49,11 @@ public class ApiService {
         return null;
     }
 
-    public List<Event> getUnreadEvents(Integer userId) {
+    public List<Event> getUnreadEvents(String token) {
         return null;
     }
 
-    public void setParcelAlias(Integer userId, Integer parcelId, String alias) {
+    public void setParcelAlias(String token, Integer parcelId, String alias) {
         return;
     }
 }
