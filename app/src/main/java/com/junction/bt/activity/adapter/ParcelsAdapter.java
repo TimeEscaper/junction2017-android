@@ -11,8 +11,11 @@ import android.widget.TextView;
 import com.junction.bt.R;
 import com.junction.bt.activity.ParcelInfoActivity;
 import com.junction.bt.api.model.Parcel;
+import com.junction.bt.util.JsonUtil;
 
 import java.util.List;
+
+import static com.junction.bt.activity.ParcelInfoActivity.PARCEL_TAG;
 
 /**
  * Created by sibirsky on 25.11.17.
@@ -37,7 +40,7 @@ public class ParcelsAdapter extends RecyclerView.Adapter<ParcelsAdapter.ParcelVi
 
     @Override
     public void onBindViewHolder(ParcelViewHolder holder, int position) {
-        holder.bind(parcels.get(position).getParcelId(), parcels.get(position).getAlias());
+        holder.bind(parcels.get(position));
     }
 
     @Override
@@ -48,24 +51,22 @@ public class ParcelsAdapter extends RecyclerView.Adapter<ParcelsAdapter.ParcelVi
     public class ParcelViewHolder extends RecyclerView.ViewHolder {
 
         private TextView textView;
-        private String parcelAlias;
-        private Integer parcelId;
+        private Parcel parcel;
 
         public ParcelViewHolder(View view) {
             super(view);
             textView = (TextView)view.findViewById(R.id.parcel_alias);
         }
 
-        public void bind(final Integer parcelId, String parcelAlias) {
-            this.parcelId = parcelId;
-            this.parcelAlias = parcelAlias;
-            textView.setText(parcelAlias);
+        public void bind(final Parcel parcel) {
+            this.parcel = parcel;
+            textView.setText(parcel.getAlias());
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, ParcelInfoActivity.class);
-                    intent.putExtra(ParcelInfoActivity.PARCEL_ID_TAG, parcelId);
+                    intent.putExtra(PARCEL_TAG, JsonUtil.toJson(parcel));
                     context.startActivity(intent);
                 }
             });

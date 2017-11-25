@@ -12,7 +12,7 @@ import com.junction.bt.R;
 
 public class ParcelInfoActivity extends AppCompatActivity {
 
-    public static final String PARCEL_ID_TAG = "PARCEL_ID";
+    public static final String PARCE_TAG = "PARCEL";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
