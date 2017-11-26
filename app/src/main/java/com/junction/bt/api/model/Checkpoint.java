@@ -6,14 +6,14 @@ package com.junction.bt.api.model;
 
 public class Checkpoint implements ApiResponse {
 
-    private Integer checkpointId;
+    private Integer id;
     private String name;
     private String address;
 
-    public Integer getCheckpointId() { return checkpointId; }
+    public Integer getId() { return id; }
 
-    public void setCheckpointId(Integer checkpointId) {
-        this.checkpointId = checkpointId;
+    public void setId(Integer checkpointId) {
+        this.id = id;
     }
 
     public String getName() {

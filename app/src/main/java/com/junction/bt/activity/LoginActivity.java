@@ -37,10 +37,6 @@ public class LoginActivity extends AppCompatActivity implements ApiCallback {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        if (savedInstanceState != null) {
-            subscribeId = savedInstanceState.getInt(SUBSCRIBED_ID);
-        }
-
         loginInput = (EditText)findViewById(R.id.login_input);
         passwordInput = (EditText)findViewById(R.id.password_input);
         btnSignup = (Button)findViewById(R.id.btn_signup);
@@ -56,34 +52,13 @@ public class LoginActivity extends AppCompatActivity implements ApiCallback {
     @Override
     protected void onStart() {
         super.onStart();
-        if (subscribeId != null) {
-            boolean isCached = ApiService.getInstance().checkCache(this, subscribeId);
-            if (!isCached) {
-                boolean isPending = ApiService.getInstance().checkPending(this, subscribeId);
-                if (!isPending) {
-                    subscribeId = ApiService.getInstance().subscribe(this);
-                }
-            }
-        } else {
-            subscribeId = ApiService.getInstance().subscribe(this);
-        }
+        subscribeId = ApiService.getInstance().subscribe(this);
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        if (subscribeId != null) {
-            ApiService.getInstance().unsubscribeTemp(subscribeId);
-            savedInstanceState.putInt(SUBSCRIBED_ID, subscribeId);
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (subscribeId != null) {
-            ApiService.getInstance().unsubscribe(subscribeId);
-        }
-        super.onDestroy();
+    protected void onStop() {
+        ApiService.getInstance().unsubscribe(subscribeId);
+        super.onStop();
     }
 
     private void btnSignupPress() {
@@ -108,7 +83,7 @@ public class LoginActivity extends AppCompatActivity implements ApiCallback {
     @Override
     public void onError(ApiService.Method method, ApiError response) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setMessage("Error while checking token!" + response.getError());
+        dialogBuilder.setMessage("Error while login! " + response.getError());
         dialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
@@ -121,6 +96,8 @@ public class LoginActivity extends AppCompatActivity implements ApiCallback {
     private void putAccountToCache(Account account) {
         SharedPreferences sharedPreferences = LoginActivity.this.getPreferences(Context.MODE_PRIVATE);
         String accountJson = JsonUtil.toJson(account);
-        sharedPreferences.edit().putString("ACCOUNT", accountJson);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString("ACCOUNT", accountJson);
+        //editor.commit();
     }
 }

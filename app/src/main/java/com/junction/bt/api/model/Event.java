@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 public class Event implements ApiResponse {
 
-    private LocalDateTime dateTime;
+    private Long dateTime;
     private Integer checkpointId;
     private Integer parcelId;
     private ParcelState state;
@@ -17,9 +17,9 @@ public class Event implements ApiResponse {
 
     public Event() {}
 
-    public LocalDateTime getDateTime() { return dateTime; }
+    public Long getDateTime() { return dateTime; }
 
-    public void setDateTime(LocalDateTime dateTime) {
+    public void setDateTime(Long dateTime) {
         this.dateTime = dateTime;
     }
 

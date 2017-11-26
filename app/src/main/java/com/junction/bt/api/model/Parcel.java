@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Parcel implements ApiResponse {
 
-    private Integer parcelId;
+    private Integer id;
     private User sender;
     private User receiver;
     private String destinationAddress;
@@ -16,15 +16,15 @@ public class Parcel implements ApiResponse {
     private Checkpoint from;
     private Checkpoint to;
     private Integer weight;
-    private Event[] history;
+    private List<Event> history;
     private String alias;
 
     public Parcel() {}
 
-    public Integer getParcelId() { return parcelId; }
+    public Integer getId() { return id; }
 
-    public void setParcelId(Integer id) {
-        this.parcelId = parcelId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public User getSender() {
@@ -75,11 +75,11 @@ public class Parcel implements ApiResponse {
 
     public void setWeight(Integer weight) { this.weight = weight; }
 
-    public Event[] getHistory() {
+    public List<Event> getHistory() {
         return history;
     }
 
-    public void setHistory(Event[] history) {
+    public void setHistory(List<Event> history) {
         this.history = history;
     }
 

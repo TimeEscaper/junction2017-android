@@ -31,12 +31,14 @@ public interface ApiInterface {
     @GET("/simple/checktoken")
     Call<TokenStatus> checkToken(@Query("token") String token);
 
-    @GET("/simple/parcels")
-    Call<ResponseList<Parcel>> getParcels(@Query("token") String token);
+    @POST("/simple/account")
+    Call<ResponseList<Parcel>> getParcels(@Query("token") String token,
+                                          @Query("type") String type);
 
-    @GET("/simple/checkpoints")
-    Call<ResponseList<Checkpoint>> getCheckpoints(@Query("ids") Integer[] ids,
-                                          @Query("token") String token);
+    @POST("/simple/account")
+    Call<ResponseList<Checkpoint>> getCheckpoints(@Query("token") String token,
+                                                  @Query("type") String type,
+                                                  @Body Integer[] ids);
 
     @GET("/simple/events/unread")
     Call<ResponseList<Event>> getUnreadEvents(@Query("token") String token);

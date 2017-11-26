@@ -2,9 +2,11 @@ package com.junction.bt.activity;
 
 import android.app.ActionBar;
 import android.content.DialogInterface;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,45 +56,23 @@ public class ParcelInfoActivity extends AppCompatActivity implements ApiCallback
 
         Integer parcelId = getIntent().getIntExtra(PARCEL_TAG, 0);
         parcel = CacheManager.getInstance().getCachedParcel(parcelId);
-
-        if (savedInstanceState != null) {
-            subscribeId = savedInstanceState.getInt(SUBSCRIBED_ID);
-        }
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        if (subscribeId != null) {
-            boolean isCached = ApiService.getInstance().checkCache(this, subscribeId);
-            if (!isCached) {
-                boolean isPending = ApiService.getInstance().checkPending(this, subscribeId);
-                if (!isPending) {
-                    subscribeId = ApiService.getInstance().subscribe(this);
-                }
-            }
-        } else {
-            subscribeId = ApiService.getInstance().subscribe(this);
-            List<Integer> checkpointIds = new ArrayList<>();
-            for (Event event : parcel.getHistory()) {
-                checkpointIds.add(event.getCheckpointId());
-            }
-            ApiService.getInstance().getCheckpoints(subscribeId, checkpointIds,
-                    UserContext.getInstance().getToken());
+        subscribeId = ApiService.getInstance().subscribe(this);
+        List<Integer> ids = new ArrayList<>();
+        for (Event event : parcel.getHistory()) {
+            ids.add(event.getCheckpointId());
         }
+        ApiService.getInstance().getCheckpoints(subscribeId, ids, UserContext.getInstance().getToken());
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        ApiService.getInstance().unsubscribeTemp(subscribeId);
-        savedInstanceState.putInt(SUBSCRIBED_ID, subscribeId);
-    }
-
-    @Override
-    protected void onDestroy() {
+    protected void onStop() {
         ApiService.getInstance().unsubscribe(subscribeId);
-        super.onDestroy();
+        super.onStop();
     }
 
     @Override
@@ -100,32 +80,38 @@ public class ParcelInfoActivity extends AppCompatActivity implements ApiCallback
         ResponseList<Checkpoint> checkpoints = (ResponseList<Checkpoint>)response;
         Map<Integer, Checkpoint> checkpointMap = new HashMap<>();
         for (Checkpoint checkpoint : checkpoints.getItems()) {
-            checkpointMap.put(checkpoint.getCheckpointId(), checkpoint);
+            checkpointMap.put(checkpoint.getId(), checkpoint);
         }
 
-        idLabel.setText("ID: " + parcel.getParcelId().toString());
+        idLabel.setText("ID: " + parcel.getId().toString());
         aliasLabel.setText("Alias: " + parcel.getAlias());
-        originalWeightLabel.setText("Original weight: " + parcel.getWeight().toString());
+        if (parcel.getHistory() != null && !parcel.getHistory().isEmpty()) {
+            originalWeightLabel.setText("Original weight: " +
+                    parcel.getHistory().get(0).getWeight().toString() + " g");
+        }
         receiverLabel.setText("Receiver: " + parcel.getReceiver().getFirstName() +
             parcel.getReceiver().getSecondName());
 
         for (Event event : parcel.getHistory()) {
+            LinearLayout linearLayout = (LinearLayout)findViewById(R.id.info_layout);
             TextView textView = new TextView(getApplicationContext());
             StringBuilder builder = new StringBuilder();
             builder.append(event.getDateTime().toString() + '\n')
                     .append(checkpointMap.get(event.getCheckpointId()).getAddress() + '\n')
                     .append(event.getDescription() + '\n')
                     .append(event.getWeight().toString() + " g\n\n");
+            //textView.setTextColor(255);
             textView.setText(builder.toString());
-            addContentView(textView, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT,
-                    ActionBar.LayoutParams.MATCH_PARENT));
+            textView.setTextColor(Color.BLACK);
+            //addContentView(textView, new ActionBar.LayoutParams(ActionBar.LayoutParams.MATCH_PARENT));
+            linearLayout.addView(textView);
         }
     }
 
     @Override
     public void onError(ApiService.Method method, ApiError response) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-        dialogBuilder.setMessage("Error while checking token!" + response.getError());
+        dialogBuilder.setMessage("Error while getting parcel list! " + response.getError());
         dialogBuilder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

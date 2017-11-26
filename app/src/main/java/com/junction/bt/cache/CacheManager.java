@@ -33,7 +33,7 @@ public class CacheManager {
 
     public void putParcels(List<Parcel> parcels) {
         for (Parcel parcel : parcels) {
-            cachedParcels.put(parcel.getParcelId(), parcel);
+            cachedParcels.put(parcel.getId(), parcel);
         }
     }
 
@@ -43,7 +43,7 @@ public class CacheManager {
 
     public void putCheckpoints(List<Checkpoint> checkpoints) {
         for (Checkpoint checkpoint : checkpoints) {
-            cachedCheckpoints.put(checkpoint.getCheckpointId(), checkpoint);
+            cachedCheckpoints.put(checkpoint.getId(), checkpoint);
         }
     }
 

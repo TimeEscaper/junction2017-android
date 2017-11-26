@@ -60,13 +60,13 @@ public class ParcelsAdapter extends RecyclerView.Adapter<ParcelsAdapter.ParcelVi
 
         public void bind(final Parcel parcel) {
             this.parcel = parcel;
-            textView.setText(parcel.getAlias());
+            textView.setText(parcel.getId().toString());
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     Intent intent = new Intent(context, ParcelInfoActivity.class);
-                    intent.putExtra(PARCEL_TAG, parcel.getParcelId());
+                    intent.putExtra(PARCEL_TAG, parcel.getId());
                     context.startActivity(intent);
                 }
             });
